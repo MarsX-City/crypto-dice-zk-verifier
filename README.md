@@ -38,5 +38,5 @@ Using this tool, players can verify whether the revealed data matches the initia
 1. Clone this repository:
 
 ```bash
-git clone https://github.com/your-org/crypto-dice-zk-verifier.git
+git clone https://github.com/MarsX-City/crypto-dice-zk-verifier.git
 cd crypto-dice-zk-verifier
