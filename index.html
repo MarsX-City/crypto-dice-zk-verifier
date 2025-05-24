@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crypto Dice Verifier</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      background: #fff;
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    label {
+      display: block;
+      margin: 15px 0 5px;
+      color: #555;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #4CAF50;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    .result {
+      margin-top: 20px;
+      word-break: break-all;
+      font-family: monospace;
+      background: #f1f1f1;
+      padding: 10px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Crypto Dice ZK Verifier</h1>
+    <label for="diceResult">Dice Result (e.g. 3,5,1):</label>
+    <input type="text" id="diceResult" placeholder="Enter dice result" />
+
+    <label for="salt">Salt:</label>
+    <input type="text" id="salt" placeholder="Enter salt value" />
+
+    <label for="timestamp">Timestamp:</label>
+    <input type="text" id="timestamp" placeholder="Enter timestamp" />
+
+    <button onclick="verifyHash()">Compute Hash</button>
+
+    <div class="result" id="output"></div>
+  </div>
+
+  <script>
+    async function verifyHash() {
+      const dice = document.getElementById("diceResult").value.trim();
+      const salt = document.getElementById("salt").value.trim();
+      const timestamp = document.getElementById("timestamp").value.trim();
+
+      if (!dice || !salt || !timestamp) {
+        document.getElementById("output").innerText = "Please fill in all fields.";
+        return;
+      }
+
+      const data = `${timestamp}|${salt}|${dice}`;
+      const encoder = new TextEncoder();
+      const dataBuffer = encoder.encode(data);
+
+      const hashBuffer = await crypto.subtle.digest("SHA-256", dataBuffer);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+      document.getElementById("output").innerText = `SHA-256 Hash: ${hashHex}`;
+    }
+  </script>
+</body>
+</html>
